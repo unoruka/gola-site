@@ -3,362 +3,511 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gola — a kinder social app</title>
-<meta name="description" content="Gola is a kinder social app. Post, share, and connect without the toxicity. Download the Android APK.">
-<meta property="og:title" content="Gola — a kinder social app">
-<meta property="og:description" content="Post, share, and connect without the toxicity. Currently in closed testing on Android.">
+<title>Gola — Social media, without the sting</title>
+<meta name="description" content="Gola is a kinder social app for Android. Post, share, and talk with people who lift you up — free forever.">
+<meta property="og:title" content="Gola — Social media, without the sting">
+<meta property="og:description" content="A kinder social app for Android. Currently in closed testing.">
 <meta property="og:type" content="website">
 <style>
   :root{
+    --ink:#1d1d1f;
+    --ink2:#6e6e73;
+    --bg:#fbfbfd;
+    --card:#ffffff;
     --teal:#009788;
-    --teal-dark:#007a6c;
-    --ink:#2b2620;
-    --ink2:#6f655a;
-    --paper:#f6f1e7;
-    --card:#fffdf8;
-    --green:#22c55e;
-    --yellow:#eab308;
-    --red:#ef4444;
+    --teal-bright:#00c9a7;
+    --dark:#0b0b10;
+    --radius:22px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    background:var(--paper);
-    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
     overflow-x:hidden;
-    -webkit-font-smoothing:antialiased;
   }
-  /* floating blobs */
-  .blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.5;z-index:0;animation:float 9s ease-in-out infinite}
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}
+  ::selection{background:rgba(0,151,136,.18)}
 
-  /* nav */
+  /* ---------- nav ---------- */
   nav{
-    position:sticky;top:0;z-index:50;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:14px 22px;
-    background:color-mix(in srgb, var(--paper) 88%, transparent);
-    backdrop-filter:blur(12px);
-    border-bottom:3px solid var(--ink);
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
+    background:rgba(251,251,253,.72);
+    border-bottom:1px solid rgba(0,0,0,.06);
   }
-  .logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:24px;letter-spacing:-.5px}
+  .nav-inner{max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink)}
   .logo-mark{
-    width:38px;height:38px;border-radius:12px;background:var(--teal);color:#fff;
-    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;
-    border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);
+    width:34px;height:34px;border-radius:10px;color:#fff;font-weight:800;font-size:16px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--teal-bright),var(--teal) 60%,#007a6c);
+    box-shadow:0 4px 14px rgba(0,151,136,.35);
   }
   .btn{
-    display:inline-flex;align-items:center;gap:8px;
-    background:var(--teal);color:#fff;font-weight:800;font-size:16px;
-    padding:13px 26px;border-radius:999px;border:3px solid var(--ink);
-    box-shadow:4px 4px 0 var(--ink);text-decoration:none;cursor:pointer;
-    transition:transform .12s ease, box-shadow .12s ease;
-    font-family:inherit;
+    display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;border:none;font-family:inherit;
+    background:linear-gradient(135deg,var(--teal-bright),var(--teal));
+    color:#fff;font-weight:600;font-size:16px;padding:14px 30px;border-radius:980px;
+    box-shadow:0 8px 24px rgba(0,151,136,.35),inset 0 1px 0 rgba(255,255,255,.25);
+    transition:transform .2s cubic-bezier(.2,.8,.3,1.2),box-shadow .2s ease;
   }
-  .btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
-  .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
-  .btn.dark{background:var(--ink);color:#fff}
-  .btn.small{padding:10px 20px;font-size:14px}
+  .btn:hover{transform:scale(1.04);box-shadow:0 12px 32px rgba(0,151,136,.45),inset 0 1px 0 rgba(255,255,255,.25)}
+  .btn:active{transform:scale(.98)}
+  .btn.small{padding:10px 22px;font-size:14px}
+  .btn.ghost{background:rgba(255,255,255,.08);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+  .btn.ghost:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);background:rgba(255,255,255,.14)}
 
-  /* hero */
+  /* ---------- hero ---------- */
   .hero{
-    position:relative;overflow:hidden;text-align:center;
-    padding:84px 22px 70px;
+    position:relative;text-align:center;
+    padding:170px 24px 90px;overflow:hidden;
+    background:
+      radial-gradient(900px 500px at 15% 10%,rgba(0,201,167,.14),transparent 60%),
+      radial-gradient(800px 500px at 85% 20%,rgba(0,151,136,.12),transparent 60%),
+      radial-gradient(700px 600px at 50% 110%,rgba(0,151,136,.08),transparent 60%),
+      var(--bg);
   }
+  .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;pointer-events:none;animation:drift 12s ease-in-out infinite}
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-30px) scale(1.08)}}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:600;color:var(--teal);
+    background:rgba(0,151,136,.08);border:1px solid rgba(0,151,136,.2);
+    padding:8px 18px;border-radius:980px;margin-bottom:28px;
+  }
+  .eyebrow .pulse{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 0 rgba(0,151,136,.5);animation:pulse 2s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 9px rgba(0,151,136,0)}100%{box-shadow:0 0 0 0 rgba(0,151,136,0)}}
   .hero h1{
-    font-size:clamp(52px,9vw,110px);font-weight:900;letter-spacing:-3px;line-height:.95;
-    position:relative;z-index:1;
+    font-size:clamp(44px,7.5vw,96px);font-weight:800;letter-spacing:-.045em;line-height:1.02;
+    max-width:900px;margin:0 auto;
   }
-  .hero h1 .stroke{
-    color:transparent;-webkit-text-stroke:3px var(--ink);
+  .hero h1 .grad{
+    background:linear-gradient(120deg,var(--teal-bright),var(--teal) 55%,#007a6c);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  .hero p.sub{
-    margin:22px auto 0;max-width:620px;font-size:19px;color:var(--ink2);line-height:1.6;
-    position:relative;z-index:1;
+  .hero .sub{
+    max-width:640px;margin:26px auto 0;font-size:clamp(17px,2.4vw,21px);line-height:1.55;color:var(--ink2);
   }
-  .hero-cta{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
-  .version-pill{
-    display:inline-block;margin-top:18px;font-size:13px;font-weight:700;color:var(--ink2);
-    background:var(--card);border:2px solid var(--ink);border-radius:999px;padding:6px 16px;
-    box-shadow:2px 2px 0 var(--ink);position:relative;z-index:1;
+  .hero-cta{margin-top:38px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;align-items:center}
+  .dl-note{margin-top:16px;font-size:13px;color:var(--ink2)}
+
+  /* phone */
+  .phone-stage{position:relative;margin:70px auto 0;max-width:340px}
+  .phone-glow{
+    position:absolute;inset:-40px;background:radial-gradient(closest-side,rgba(0,201,167,.35),transparent);
+    filter:blur(40px);pointer-events:none;
   }
-  /* phone mockup */
-  .phone-wrap{margin:56px auto 0;position:relative;z-index:1;max-width:300px}
   .phone{
-    width:280px;margin:0 auto;background:#111;border:3px solid var(--ink);border-radius:44px;
-    box-shadow:8px 8px 0 var(--ink);overflow:hidden;
+    position:relative;width:300px;margin:0 auto;background:#0b0b10;border-radius:52px;
+    padding:12px;box-shadow:0 40px 90px rgba(0,0,0,.28),0 4px 18px rgba(0,0,0,.15);
   }
-  .phone-screen{background:var(--paper);min-height:480px;text-align:left}
-  .phone-topbar{
-    background:var(--card);border-bottom:2px solid var(--ink);padding:12px;text-align:center;
-    font-weight:900;font-size:17px;
+  .phone-screen{background:#f5f5f7;border-radius:42px;overflow:hidden;min-height:560px;text-align:left}
+  .notch{height:28px;display:flex;justify-content:center;align-items:center}
+  .notch span{width:100px;height:22px;background:#0b0b10;border-radius:12px}
+  .app-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#fff;border-bottom:1px solid rgba(0,0,0,.06)}
+  .app-topbar b{font-size:17px;letter-spacing:-.02em}
+  .app-topbar .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--teal-bright),var(--teal));color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .story-row{display:flex;gap:12px;padding:14px 16px;background:#fff;overflow:hidden}
+  .story{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;color:var(--ink2)}
+  .story .ring{width:52px;height:52px;border-radius:50%;padding:2.5px;background:conic-gradient(from 180deg,var(--teal-bright),var(--teal),#7c6cf0,var(--teal-bright))}
+  .story .ring div{width:100%;height:100%;border-radius:50%;background:#e8e8ed;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:18px}
+  .post{background:#fff;border-top:1px solid rgba(0,0,0,.05);padding:14px 16px}
+  .post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .post-head .pa{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px}
+  .post-head .pn{font-size:14px;font-weight:600}
+  .post-head .pn small{display:block;font-weight:400;color:var(--ink2);font-size:12px}
+  .post p.txt{font-size:14px;line-height:1.5;margin-bottom:10px}
+  .reply{
+    background:rgba(0,151,136,.07);border:1px solid rgba(0,151,136,.22);border-radius:14px;
+    padding:10px 12px;font-size:13px;line-height:1.5;margin-bottom:10px;
   }
-  .mini-post{background:var(--card);border:2px solid var(--ink);border-radius:16px;margin:12px;overflow:hidden;box-shadow:3px 3px 0 var(--ink)}
-  .mini-post .head{background:var(--teal);color:#fff;padding:9px 12px;font-weight:800;font-size:13px}
-  .mini-post .head.alt{background:#7c6cf0}
-  .mini-post .body{padding:10px 12px;font-size:13px;line-height:1.5}
-  .mini-reply{margin:2px 12px 4px;background:var(--paper);border:2px dashed var(--teal-dark);border-radius:12px;padding:8px 10px;font-size:12px;line-height:1.5}
-  .mini-post .actions{display:flex;gap:14px;padding:8px 12px 11px;font-size:13px;color:var(--ink2)}
+  .reply .who{display:flex;align-items:center;gap:6px;font-weight:700;margin-bottom:4px}
+  .badge-official{font-size:10px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--teal-bright),var(--teal));padding:2px 8px;border-radius:980px}
+  .post-actions{display:flex;gap:16px;font-size:13px;color:var(--ink2)}
+  .tabbar{display:flex;justify-content:space-around;padding:12px 0 20px;background:#fff;border-top:1px solid rgba(0,0,0,.06);font-size:20px}
 
-  /* sections */
-  section{padding:76px 22px;position:relative}
-  .kicker{text-align:center;font-size:13px;font-weight:800;letter-spacing:3px;color:var(--teal-dark);text-transform:uppercase}
-  h2.sec-title{text-align:center;font-size:clamp(32px,5vw,54px);font-weight:900;letter-spacing:-1.5px;margin-top:10px}
-  p.sec-sub{text-align:center;color:var(--ink2);max-width:640px;margin:14px auto 0;font-size:17px;line-height:1.6}
+  /* ---------- reveal ---------- */
+  .rv{opacity:0;transform:translateY(34px);transition:opacity .8s ease,transform .8s cubic-bezier(.16,1,.3,1)}
+  .rv.in{opacity:1;transform:none}
+  .rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}
 
-  .cards{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;
-    max-width:1060px;margin:44px auto 0;
-  }
+  /* ---------- sections ---------- */
+  section{padding:110px 24px;position:relative}
+  .wrap{max-width:1120px;margin:0 auto}
+  .kicker{text-align:center;font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
+  h2.title{text-align:center;font-size:clamp(32px,4.6vw,56px);font-weight:800;letter-spacing:-.035em;line-height:1.08;max-width:760px;margin:0 auto}
+  p.lead{text-align:center;color:var(--ink2);font-size:clamp(16px,2.2vw,19px);line-height:1.6;max-width:660px;margin:20px auto 0}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:60px}
   .card{
-    background:var(--card);border:3px solid var(--ink);border-radius:22px;
-    box-shadow:6px 6px 0 var(--ink);padding:28px 24px;
-    opacity:0;transform:translateY(28px);
-    transition:opacity .6s ease,transform .6s cubic-bezier(.2,.9,.25,1);
+    background:var(--card);border-radius:var(--radius);padding:34px 28px;
+    border:1px solid rgba(0,0,0,.06);
+    box-shadow:0 2px 12px rgba(0,0,0,.04);
+    transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease;
+    position:relative;overflow:hidden;
   }
-  .card.visible{opacity:1;transform:none}
-  .card .emoji{font-size:38px}
-  .card h3{margin:14px 0 8px;font-size:20px;font-weight:800;letter-spacing:-.3px}
-  .card p{color:var(--ink2);font-size:15px;line-height:1.6}
-  .dots{display:flex;gap:8px;margin-top:14px}
-  .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink)}
-
-  /* why gola */
-  .why{background:var(--ink);color:#f6f1e7;border-radius:36px;max-width:1060px;margin:0 auto;padding:60px 34px}
-  .why .kicker{color:#7fd6cc}
-  .why h2.sec-title{color:#fff}
-  .why p.sec-sub{color:#b9b0a2}
-  .compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
-  @media(max-width:640px){.compare{grid-template-columns:1fr}}
-  .vs-card{border-radius:20px;padding:28px 24px;border:3px solid #f6f1e7}
-  .vs-card.bad{background:#2e2a24}
-  .vs-card.good{background:var(--teal);border-color:var(--ink);box-shadow:6px 6px 0 #000}
-  .vs-card h3{font-size:20px;margin-bottom:14px}
-  .vs-card ul{list-style:none;display:flex;flex-direction:column;gap:12px}
-  .vs-card li{font-size:15px;line-height:1.55;display:flex;gap:10px}
-  .vs-card.bad li{color:#c9c2b4}
-  .vs-card.good li{color:#fff;font-weight:600}
-
-  /* download band */
-  .dl-band{
-    max-width:760px;margin:0 auto;text-align:center;background:var(--card);
-    border:3px solid var(--ink);border-radius:28px;box-shadow:8px 8px 0 var(--ink);
-    padding:56px 30px;
+  .card::before{
+    content:"";position:absolute;inset:0;opacity:0;transition:opacity .35s ease;pointer-events:none;
+    background:radial-gradient(420px 200px at 50% -60px,rgba(0,201,167,.16),transparent 70%);
   }
-  .dl-band h2{font-size:clamp(30px,5vw,48px);font-weight:900;letter-spacing:-1px}
-  .dl-band p{color:var(--ink2);margin:14px 0 28px;font-size:17px}
-  .dl-meta{margin-top:18px;font-size:13px;color:var(--ink2)}
+  .card:hover{transform:translateY(-8px);box-shadow:0 24px 50px rgba(0,0,0,.1)}
+  .card:hover::before{opacity:1}
+  .icon-chip{
+    width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;
+    background:linear-gradient(135deg,rgba(0,201,167,.16),rgba(0,151,136,.08));
+    border:1px solid rgba(0,151,136,.2);margin-bottom:20px;
+  }
+  .card h3{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:10px}
+  .card p{color:var(--ink2);font-size:15.5px;line-height:1.65}
+  .status-dots{display:flex;gap:10px;margin-top:18px}
+  .status-dots span{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 -2px 4px rgba(0,0,0,.15),0 2px 6px rgba(0,0,0,.12)}
 
-  /* faq */
-  .faq{max-width:720px;margin:36px auto 0}
-  .faq-item{background:var(--card);border:3px solid var(--ink);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink)}
+  /* ---------- dark showcase ---------- */
+  .dark-sec{background:var(--dark);color:#f5f5f7;border-radius:36px;margin:0 16px;overflow:hidden;position:relative}
+  .dark-sec::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(700px 380px at 20% 0%,rgba(0,201,167,.16),transparent 60%),
+      radial-gradient(600px 400px at 90% 100%,rgba(124,108,240,.14),transparent 60%);
+  }
+  .dark-sec .kicker{color:var(--teal-bright)}
+  .dark-sec h2.title{color:#fff}
+  .dark-sec p.lead{color:#a1a1a6}
+  .showcase{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:60px;position:relative}
+  @media(max-width:860px){.showcase{grid-template-columns:1fr}}
+  .show-copy h3{font-size:clamp(24px,3vw,34px);font-weight:700;letter-spacing:-.03em;margin-bottom:16px;color:#fff}
+  .show-copy p{color:#a1a1a6;font-size:17px;line-height:1.7;margin-bottom:14px}
+  .show-copy p b{color:#fff}
+  .mini-phone{max-width:300px;margin:0 auto;transform:rotate(-2deg);transition:transform .5s cubic-bezier(.16,1,.3,1)}
+  .mini-phone:hover{transform:rotate(0deg) scale(1.02)}
+
+  /* ---------- compare ---------- */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:60px}
+  @media(max-width:680px){.compare{grid-template-columns:1fr}}
+  .vs{border-radius:var(--radius);padding:38px 32px;border:1px solid rgba(0,0,0,.06)}
+  .vs.bad{background:#fff}
+  .vs.good{
+    background:linear-gradient(150deg,#0d3b36,#085e55 60%,#007a6c);color:#fff;border:none;
+    box-shadow:0 30px 60px rgba(0,122,108,.3);
+  }
+  .vs h3{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:22px}
+  .vs ul{list-style:none;display:flex;flex-direction:column;gap:16px}
+  .vs li{display:flex;gap:12px;font-size:16px;line-height:1.55}
+  .vs.bad li{color:var(--ink2)}
+  .vs .x{color:#ff6b6b;font-weight:700;flex-shrink:0}
+  .vs .t{color:var(--teal-bright);font-weight:700;flex-shrink:0}
+
+  /* ---------- download band ---------- */
+  .band{
+    max-width:920px;margin:0 auto;text-align:center;border-radius:32px;padding:80px 40px;color:#fff;position:relative;overflow:hidden;
+    background:linear-gradient(130deg,#0a4f47,#009788 55%,#00c9a7);
+    box-shadow:0 40px 80px rgba(0,151,136,.35);
+  }
+  .band::before{
+    content:"";position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(90px);opacity:.4;
+    background:#fff;top:-300px;right:-150px;pointer-events:none;animation:drift 10s ease-in-out infinite;
+  }
+  .band h2{font-size:clamp(32px,5vw,54px);font-weight:800;letter-spacing:-.035em;position:relative}
+  .band p{margin:18px auto 34px;max-width:520px;font-size:18px;line-height:1.6;opacity:.92;position:relative}
+  .band .btn{background:#fff;color:#0a4f47;box-shadow:0 10px 30px rgba(0,0,0,.2);position:relative}
+  .band .btn:hover{box-shadow:0 16px 40px rgba(0,0,0,.28)}
+  .band-meta{margin-top:20px;font-size:13.5px;opacity:.8;position:relative}
+
+  /* ---------- faq ---------- */
+  .faq{max-width:760px;margin:54px auto 0}
+  .faq-item{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:18px;margin-bottom:12px;overflow:hidden;transition:box-shadow .3s ease}
+  .faq-item.open{box-shadow:0 12px 32px rgba(0,0,0,.08)}
   .faq-q{
-    width:100%;background:none;border:none;font:inherit;text-align:left;cursor:pointer;
-    padding:18px 20px;font-weight:800;font-size:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--ink);
+    width:100%;background:none;border:none;font:inherit;cursor:pointer;text-align:left;color:var(--ink);
+    padding:22px 24px;font-weight:600;font-size:17px;letter-spacing:-.01em;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
   }
-  .faq-q .chev{transition:transform .25s ease;font-size:18px;color:var(--teal-dark)}
-  .faq-item.open .faq-q .chev{transform:rotate(180deg)}
-  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
-  .faq-a p{padding:0 20px 20px;color:var(--ink2);font-size:15px;line-height:1.65}
+  .faq-q .plus{
+    flex-shrink:0;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(0,151,136,.1);color:var(--teal);font-size:18px;font-weight:400;
+    transition:transform .3s cubic-bezier(.16,1,.3,1),background .3s ease;
+  }
+  .faq-item.open .plus{transform:rotate(45deg);background:var(--teal);color:#fff}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1)}
+  .faq-a p{padding:0 24px 24px;color:var(--ink2);font-size:16px;line-height:1.7}
 
-  footer{
-    background:var(--ink);color:#b9b0a2;padding:52px 22px 34px;margin-top:40px;
-  }
-  .foot-inner{max-width:1060px;margin:0 auto;display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
-  .foot-inner h4{color:#fff;font-size:14px;letter-spacing:2px;margin-bottom:14px}
-  .foot-inner a{color:#b9b0a2;text-decoration:none;font-size:14px;display:block;margin-bottom:10px}
-  .foot-inner a:hover{color:#fff}
-  .foot-bottom{max-width:1060px;margin:34px auto 0;padding-top:22px;border-top:1px solid #4a443a;font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  /* ---------- footer ---------- */
+  footer{background:var(--dark);color:#86868b;padding:70px 24px 40px;margin-top:60px}
+  .foot{max-width:1120px;margin:0 auto}
+  .foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;margin-bottom:50px}
+  .foot-brand p{font-size:14px;line-height:1.6;max-width:280px;margin-top:14px}
+  .foot h4{color:#f5f5f7;font-size:13px;font-weight:600;letter-spacing:.08em;margin-bottom:18px}
+  .foot a{color:#86868b;text-decoration:none;font-size:14px;display:block;margin-bottom:12px;transition:color .2s}
+  .foot a:hover{color:#fff}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="logo"><span class="logo-mark">go</span>Gola</div>
-  <a class="btn small" href="gola.apk" download>⬇ Download</a>
+  <div class="nav-inner">
+    <a class="logo" href="#"><span class="logo-mark">go</span>Gola</a>
+    <a class="btn small" href="gola.apk" download>Download</a>
+  </div>
 </nav>
 
 <header class="hero">
-  <div class="blob" style="width:180px;height:180px;background:#7fd6cc;top:60px;left:6%"></div>
-  <div class="blob" style="width:120px;height:120px;background:#ffd166;top:200px;right:8%;animation-delay:2s"></div>
-  <div class="blob" style="width:90px;height:90px;background:#c3b2fb;bottom:120px;left:12%;animation-delay:4s"></div>
-  <h1>Gola<br><span class="stroke">a kinder</span> social app</h1>
-  <p class="sub">Post, share, and connect with people who lift you up. No toxicity, no noise — just a kinder corner of the internet.</p>
-  <div class="hero-cta">
-    <a class="btn" href="gola.apk" download>⬇ Download Gola APK</a>
-  </div>
-  <div><span class="version-pill">v2.0.0 · Android · Free</span></div>
+  <div class="orb" style="width:420px;height:420px;background:#00c9a7;top:-120px;left:-120px"></div>
+  <div class="orb" style="width:340px;height:340px;background:#7c6cf0;top:20px;right:-100px;animation-delay:3s;opacity:.3"></div>
 
-  <div class="phone-wrap">
+  <div class="rv in">
+    <span class="eyebrow"><span class="pulse"></span>Now in closed testing · Version 2.0.0</span>
+    <h1>Social media,<br><span class="grad">without the sting.</span></h1>
+    <p class="sub">Gola is a kinder place to post, share, and talk — built with friends, shaped by real feedback, and free of the noise that makes other apps exhausting.</p>
+    <div class="hero-cta">
+      <a class="btn" href="gola.apk" download>Download for Android</a>
+    </div>
+    <div class="dl-note">Free forever · No account needed to look around</div>
+  </div>
+
+  <div class="phone-stage rv in d1">
+    <div class="phone-glow"></div>
     <div class="phone">
       <div class="phone-screen">
-        <div class="phone-topbar">Gola</div>
-        <div class="mini-post">
-          <div class="head">Riya <span style="font-weight:400;opacity:.85">@riya</span></div>
-          <div class="body">Spotted a tiny bug — the status bar icons disappear in dark mode 👀</div>
-          <div class="mini-reply"><b>gola ✓</b> <span style="font-weight:400;opacity:.85">@gola · Official</span><br>Great catch, thank you! A fix is already in the works 🌱</div>
-          <div class="actions">♡ 12 &nbsp;&nbsp; 💬 4 &nbsp;&nbsp; 🔗</div>
+        <div class="notch"><span></span></div>
+        <div class="app-topbar"><b>Gola</b><div class="av">R</div></div>
+        <div class="story-row">
+          <div class="story"><div class="ring"><div>🌅</div></div>You</div>
+          <div class="story"><div class="ring"><div>🎨</div></div>riya</div>
+          <div class="story"><div class="ring"><div>📚</div></div>arjun</div>
+          <div class="story"><div class="ring"><div>🌿</div></div>meera</div>
         </div>
-        <div class="mini-post">
-          <div class="head alt">Arjun <span style="font-weight:400;opacity:.85">@arjun</span></div>
-          <div class="body">The new Safety Status indicator is such a nice touch 🟢 Profiles feel trustworthy now.</div>
-          <div class="mini-reply"><b>gola ✓</b> <span style="font-weight:400;opacity:.85">@gola · Official</span><br>So glad you noticed! Kindness, verified ✅</div>
-          <div class="actions">♡ 21 &nbsp;&nbsp; 💬 6 &nbsp;&nbsp; 🔗</div>
+        <div class="post">
+          <div class="post-head">
+            <div class="pa" style="background:linear-gradient(135deg,#f6a44a,#e8734a)">R</div>
+            <div class="pn">Riya<small>@riya · 2h</small></div>
+          </div>
+          <p class="txt">Spotted a tiny bug — the status bar icons disappear in dark mode 👀</p>
+          <div class="reply">
+            <div class="who">gola <span class="badge-official">OFFICIAL</span></div>
+            Great catch, thank you! A fix is already in the works 🌱
+          </div>
+          <div class="post-actions"><span>♡ 12</span><span>💬 4</span><span>↗</span></div>
         </div>
+        <div class="post">
+          <div class="post-head">
+            <div class="pa" style="background:linear-gradient(135deg,#7c6cf0,#4a3fd4)">A</div>
+            <div class="pn">Arjun<small>@arjun · 5h</small></div>
+          </div>
+          <p class="txt">The new Safety Status indicator is such a nice touch 🟢 Profiles feel trustworthy now.</p>
+          <div class="reply">
+            <div class="who">gola <span class="badge-official">OFFICIAL</span></div>
+            So glad you noticed! Kindness, verified ✅
+          </div>
+          <div class="post-actions"><span>♡ 21</span><span>💬 6</span><span>↗</span></div>
+        </div>
+        <div class="tabbar"><span>🏠</span><span>🔍</span><span>🔔</span><span>⚙️</span></div>
       </div>
     </div>
   </div>
 </header>
 
 <section id="features">
-  <div class="kicker">Highlights</div>
-  <h2 class="sec-title">Everything you need.<br>Nothing toxic.</h2>
-  <p class="sec-sub">Gola keeps the parts of social media you love and leaves the rest behind.</p>
-  <div class="cards">
-    <div class="card">
-      <div class="emoji">🔗</div>
-      <h3>Profile Sharing</h3>
-      <p>Share your profile with a simple link. Friends tap it and land straight on your page — no searching, no friction.</p>
-    </div>
-    <div class="card">
-      <div class="emoji">🛡️</div>
-      <h3>Safety Status</h3>
-      <p>Every profile shows a clear safety indicator at a glance — so you always know an account's standing.</p>
-      <div class="dots">
-        <span class="dot" style="background:var(--green)"></span>
-        <span class="dot" style="background:var(--yellow)"></span>
-        <span class="dot" style="background:var(--red)"></span>
+  <div class="wrap">
+    <div class="kicker rv">Why you'll like it here</div>
+    <h2 class="title rv d1">Designed for people,<br>not for engagement metrics.</h2>
+    <p class="lead rv d2">Every part of Gola exists for one reason: to make talking to each other feel good again.</p>
+    <div class="grid">
+      <div class="card rv">
+        <div class="icon-chip">🔗</div>
+        <h3>Your profile, one tap away</h3>
+        <p>Share a simple link and friends land straight on your page. No usernames to spell out, no searching — just tap and you're there.</p>
       </div>
-    </div>
-    <div class="card">
-      <div class="emoji">🤖</div>
-      <h3>Smart Moderation</h3>
-      <p>AI-assisted report review plus instant spam and banned-word filters. Genuine reports lead to real action; fake ones don't.</p>
-    </div>
-    <div class="card">
-      <div class="emoji">🔄</div>
-      <h3>In-Settings Updates</h3>
-      <p>No app store needed. Check for updates right inside Settings and grab the newest build in one tap.</p>
+      <div class="card rv d1">
+        <div class="icon-chip">🛡️</div>
+        <h3>Know where you stand</h3>
+        <p>A small green, yellow, or red indicator on every profile shows an account's standing at a glance. Trust, made visible.</p>
+        <div class="status-dots">
+          <span style="background:#22c55e"></span>
+          <span style="background:#eab308"></span>
+          <span style="background:#ef4444"></span>
+        </div>
+      </div>
+      <div class="card rv d2">
+        <div class="icon-chip">👀</div>
+        <h3>Reports that go somewhere</h3>
+        <p>Flag something and it gets a real review — warnings, temporary restrictions, and follow-ups when it counts. Filing false reports has consequences too.</p>
+      </div>
+      <div class="card rv d3">
+        <div class="icon-chip">✨</div>
+        <h3>Updates without the app store</h3>
+        <p>When a new build is ready, you'll find it in Settings. One tap to download, and you stay logged in — nothing lost, no hassle.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<section>
-  <div class="why">
-    <div class="kicker">Why Gola?</div>
-    <h2 class="sec-title">Scrolling vs Connecting</h2>
-    <p class="sec-sub">Most apps are built to keep you scrolling. Gola is built to keep you smiling.</p>
+<section style="padding-top:20px">
+  <div class="dark-sec">
+    <div class="wrap" style="padding:100px 32px">
+      <div class="kicker rv">Built in the open</div>
+      <h2 class="title rv d1">Shaped by the people<br>who actually use it.</h2>
+      <p class="lead rv d2">When testers find a rough edge, they say so — and the fix ships in the next build. That's the whole development process.</p>
+      <div class="showcase">
+        <div class="show-copy rv">
+          <h3>Feedback isn't a form.<br>It's a conversation.</h3>
+          <p>A tester noticed the status bar icons vanishing in dark mode. They posted about it, the team replied the same day, and the fix went out with the next update.</p>
+          <p><b>No ticket queues. No black holes.</b> Just people talking to people — which is rather the point of the app.</p>
+        </div>
+        <div class="mini-phone rv d1">
+          <div class="phone" style="width:280px">
+            <div class="phone-screen" style="min-height:480px">
+              <div class="notch"><span></span></div>
+              <div class="app-topbar"><b>Gola</b><div class="av">R</div></div>
+              <div class="post">
+                <div class="post-head">
+                  <div class="pa" style="background:linear-gradient(135deg,#f6a44a,#e8734a)">R</div>
+                  <div class="pn">Riya<small>@riya · 2h</small></div>
+                </div>
+                <p class="txt">Spotted a tiny bug — the status bar icons disappear in dark mode 👀</p>
+                <div class="reply">
+                  <div class="who">gola <span class="badge-official">OFFICIAL</span></div>
+                  Great catch, thank you! A fix is already in the works 🌱
+                </div>
+                <div class="post-actions"><span>♡ 12</span><span>💬 4</span><span>↗</span></div>
+              </div>
+              <div class="tabbar"><span>🏠</span><span>🔍</span><span>🔔</span><span>⚙️</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <div class="kicker rv">The difference</div>
+    <h2 class="title rv d1">Most apps want your attention.<br>Gola wants your trust.</h2>
     <div class="compare">
-      <div class="vs-card bad">
-        <h3>❌ Elsewhere</h3>
+      <div class="vs bad rv">
+        <h3>The usual feed</h3>
         <ul>
-          <li>✕ Feeds optimized for outrage and doomscrolling</li>
-          <li>✕ Toxic comments with no real consequences</li>
-          <li>✕ You mostly see people you already know</li>
-          <li>✕ More time consuming than connecting</li>
+          <li><span class="x">✕</span>Feeds tuned for outrage and endless scrolling</li>
+          <li><span class="x">✕</span>Comments with no real consequences</li>
+          <li><span class="x">✕</span>You mostly see people you already know</li>
+          <li><span class="x">✕</span>More time consuming than connecting</li>
         </ul>
       </div>
-      <div class="vs-card good">
-        <h3>✓ Gola</h3>
+      <div class="vs good rv d1">
+        <h3>The Gola feed</h3>
         <ul>
-          <li>✓ Kindness-first feed, zero toxicity by design</li>
-          <li>✓ Reports that actually lead to action</li>
-          <li>✓ Discover kind people and new perspectives</li>
-          <li>✓ Built for conversations, not consumption</li>
+          <li><span class="t">✓</span>A feed that stays kind by design</li>
+          <li><span class="t">✓</span>Reports reviewed by people who care</li>
+          <li><span class="t">✓</span>Room to discover genuinely good humans</li>
+          <li><span class="t">✓</span>Built for conversation, not consumption</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<section id="download">
-  <div class="dl-band">
-    <h2>Get Gola on Android</h2>
-    <p>We're in closed testing with friends right now. Grab the latest build and come say hi. 🌱</p>
-    <a class="btn" href="gola.apk" download>⬇ Download Gola APK</a>
-    <div class="dl-meta">v2.0.0 · ~7 MB · Android 8.0+ · Free forever</div>
+<section id="download" style="padding-top:20px">
+  <div class="wrap">
+    <div class="band rv">
+      <h2>Come say hi.</h2>
+      <p>Grab the latest build and join the kindest corner of the internet. We'd love to have you.</p>
+      <a class="btn" href="gola.apk" download>Download Gola for Android</a>
+      <div class="band-meta">Version 2.0.0 · About 7 MB · Android 8 and up</div>
+    </div>
   </div>
 </section>
 
-<section id="faq">
-  <div class="kicker">FAQ</div>
-  <h2 class="sec-title">Frequently Asked Questions</h2>
-  <div class="faq">
-    <div class="faq-item">
-      <button class="faq-q">Is Gola free to use? <span class="chev">▾</span></button>
-      <div class="faq-a"><p>Yes — completely free, forever. No ads, no paid tiers, no locked features. Customization like theme colors is free for everyone.</p></div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q">What can I do on Gola? <span class="chev">▾</span></button>
-      <div class="faq-a"><p>Post text and photos, comment, share stories, follow kind people, and customize your profile color. Everything is designed to feel calm and friendly.</p></div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q">How does Gola keep things safe? <span class="chev">▾</span></button>
-      <div class="faq-a"><p>Every account shows a safety status (🟢 safe, 🟡 caution, 🔴 restricted). Reports go through AI-assisted review — genuine violations lead to warnings, posting restrictions, or review, while fake reports can cost reporting privileges.</p></div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q">How do I update the app? <span class="chev">▾</span></button>
-      <div class="faq-a"><p>Open Settings → Check for updates. If a new version is available you'll see a download link right there. Installing a new APK keeps your login and data.</p></div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q">Is Gola available on iPhone? <span class="chev">▾</span></button>
-      <div class="faq-a"><p>Not yet — we're Android-only during testing so we can polish one great experience first.</p></div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q">Who can join right now? <span class="chev">▾</span></button>
-      <div class="faq-a"><p>Gola is in closed testing with friends. New signups go through a quick approval so the community stays kind from day one.</p></div>
+<section id="faq" style="padding-top:40px">
+  <div class="wrap">
+    <div class="kicker rv">Good questions</div>
+    <h2 class="title rv d1">Everything you're wondering.</h2>
+    <div class="faq">
+      <div class="faq-item rv">
+        <button class="faq-q">Is Gola really free?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Yes — free, no asterisks. No ads, no subscriptions, no paywalled features. Even the fun stuff, like custom theme colors, costs nothing and always will.</p></div>
+      </div>
+      <div class="faq-item rv d1">
+        <button class="faq-q">What can I actually do on Gola?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Post photos and thoughts, join in on comments, share 24-hour stories, follow people you like, and make your profile yours with your own color. It's the familiar social app shape — minus the parts that drain you.</p></div>
+      </div>
+      <div class="faq-item rv d2">
+        <button class="faq-q">How do you keep it safe?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Every profile carries a safety status: green means good standing, yellow means caution, red means restricted. When someone files a report, a real review kicks in — warnings, temporary posting limits, and removal in serious cases. And filing false reports can cost you your own reporting privileges.</p></div>
+      </div>
+      <div class="faq-item rv d3">
+        <button class="faq-q">How do updates work?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Open Settings and tap Check for updates. If there's a new version waiting, you'll get a download link right there. Install it over your current app — you stay logged in and nothing is lost.</p></div>
+      </div>
+      <div class="faq-item rv">
+        <button class="faq-q">When is the iPhone version coming?<span class="plus">+</span></button>
+        <div class="faq-a"><p>We're Android-only while we're small, and that's deliberate — one platform done well beats two done halfway. iOS comes later, once the Android experience is exactly right.</p></div>
+      </div>
+      <div class="faq-item rv d1">
+        <button class="faq-q">Can anyone join right now?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Gola is in closed testing with friends. If you'd like in, download the app and sign up — new accounts get a quick review first, so the community stays kind from day one.</p></div>
+      </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="foot-inner">
-    <div>
-      <div class="logo" style="color:#fff;margin-bottom:12px"><span class="logo-mark">go</span>Gola</div>
-      <p style="font-size:14px;max-width:260px">A kinder social app. Currently in closed testing.</p>
+  <div class="foot">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="logo" href="#" style="color:#f5f5f7"><span class="logo-mark">go</span>Gola</a>
+        <p>Social media, without the sting. Currently in closed testing on Android.</p>
+      </div>
+      <div>
+        <h4>APP</h4>
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div>
+        <h4>CONNECT</h4>
+        <a href="https://www.instagram.com/gola.app" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://whatsapp.com/channel/0029VbEAJd23AzNUHrtTqL3Y" target="_blank" rel="noopener">WhatsApp channel</a>
+      </div>
     </div>
-    <div>
-      <h4>APP</h4>
-      <a href="#features">Features</a>
-      <a href="#download">Download</a>
-      <a href="#faq">FAQ</a>
+    <div class="foot-bottom">
+      <span>© 2026 Gola. All rights reserved.</span>
+      <span>Made with kindness 🌱</span>
     </div>
-    <div>
-      <h4>CONNECT</h4>
-      <a href="https://www.instagram.com/gola.app" target="_blank" rel="noopener">Instagram @gola.app</a>
-      <a href="https://whatsapp.com/channel/0029VbEAJd23AzNUHrtTqL3Y" target="_blank" rel="noopener">WhatsApp Channel</a>
-    </div>
-  </div>
-  <div class="foot-bottom">
-    <span>© 2026 Gola. All rights reserved.</span>
-    <span>Made with kindness 🌱</span>
   </div>
 </footer>
 
 <script>
-  // Scroll-reveal animations
+  // Scroll-reveal with stagger
   const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.card').forEach(c => io.observe(c));
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
-  // FAQ accordion
+  // FAQ accordion (plus icon, smooth height)
   document.querySelectorAll('.faq-item').forEach(item => {
     const q = item.querySelector('.faq-q');
     const a = item.querySelector('.faq-a');
     q.addEventListener('click', () => {
-      const isOpen = item.classList.contains('open');
+      const wasOpen = item.classList.contains('open');
       document.querySelectorAll('.faq-item.open').forEach(o => {
         o.classList.remove('open');
         o.querySelector('.faq-a').style.maxHeight = '0px';
       });
-      if (!isOpen) {
+      if (!wasOpen) {
         item.classList.add('open');
         a.style.maxHeight = a.scrollHeight + 'px';
       }
     });
   });
+
+  // Nav shadow on scroll
+  const nav = document.querySelector('nav');
+  addEventListener('scroll', () => {
+    nav.style.boxShadow = scrollY > 10 ? '0 4px 24px rgba(0,0,0,.08)' : 'none';
+  }, { passive: true });
 </script>
 </body>
 </html>
